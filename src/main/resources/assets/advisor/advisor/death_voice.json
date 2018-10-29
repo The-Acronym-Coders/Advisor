@@ -1,0 +1,8 @@
+{
+  "type": "advisor:voice",
+  "sound": "advisor:death_message",
+  "triggers": {
+    "name": "advisor:death",
+    "weight": 1
+  }
+}

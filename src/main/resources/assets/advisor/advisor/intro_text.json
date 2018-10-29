@@ -1,0 +1,7 @@
+{
+  "type": "advisor:lang",
+  "info": {
+    "langKey": "advisor.lang.intro"
+  },
+  "trigger": "advisor:intro"
+}
