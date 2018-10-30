@@ -1,14 +1,9 @@
-package com.teamacronymcoders.advisor.speech;
+package com.teamacronymcoders.advisor.api.speech;
 
-import com.teamacronymcoders.advisor.api.speech.Response;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class EmptyResponse implements Response {
-    @Override
-    public String getName() {
-        return "advisor:empty";
-    }
-
+public class EmptyResponse extends IForgeRegistryEntry.Impl<IResponse> implements IResponse {
     @Override
     public boolean canRespond(EntityPlayer entityPlayer) {
         return true;

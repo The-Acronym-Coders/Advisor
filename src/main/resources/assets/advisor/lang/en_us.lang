@@ -1,1 +1,2 @@
-advisor.command.respond=/advisor respond <response>
+advisor.command.respond=/advisor respond <response> [force]
+advisor.lang.intro=HELLO WORLD
