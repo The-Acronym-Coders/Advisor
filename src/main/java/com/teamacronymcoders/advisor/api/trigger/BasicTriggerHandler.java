@@ -1,13 +1,13 @@
 package com.teamacronymcoders.advisor.api.trigger;
 
 import com.google.common.collect.Lists;
-import com.teamacronymcoders.advisor.api.speech.IResponse;
+import com.teamacronymcoders.advisor.api.speech.Response;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.List;
 
 public class BasicTriggerHandler extends IForgeRegistryEntry.Impl<ITriggerHandler> implements ITriggerHandler {
-    private final List<IResponse> responses;
+    private final List<Response> responses;
 
     public BasicTriggerHandler() {
         this.responses = Lists.newArrayList();
@@ -19,12 +19,12 @@ public class BasicTriggerHandler extends IForgeRegistryEntry.Impl<ITriggerHandle
     }
 
     @Override
-    public void addResponse(IResponse response, ITriggerInfo triggerInfo) {
+    public void addResponse(Response response, ITriggerInfo triggerInfo) {
         this.responses.add(response);
     }
 
     @Override
-    public List<IResponse> getAllResponses() {
+    public List<Response> getAllResponses() {
         return this.responses;
     }
 }

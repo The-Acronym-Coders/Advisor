@@ -1,0 +1,6 @@
+{
+  "type": "advisor:sound",
+  "info": {
+    "sound": "advisor:intro_voice"
+  }
+}

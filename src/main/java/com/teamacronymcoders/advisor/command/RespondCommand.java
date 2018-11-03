@@ -2,13 +2,12 @@ package com.teamacronymcoders.advisor.command;
 
 import com.teamacronymcoders.advisor.Advisor;
 import com.teamacronymcoders.advisor.api.AdvisorRegistries;
-import com.teamacronymcoders.advisor.api.speech.IResponse;
+import com.teamacronymcoders.advisor.api.speech.Response;
 import com.teamacronymcoders.advisor.network.ResponsePacket;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -39,7 +38,7 @@ public class RespondCommand extends CommandBase {
             throw new WrongUsageException("advisor.command.args.wrongAmount", 1);
         }
         if (sender instanceof EntityPlayerMP) {
-            IResponse response = AdvisorRegistries.RESPONSES.getValue(new ResourceLocation(args[0]));
+            Response response = AdvisorRegistries.RESPONSES.getValue(new ResourceLocation(args[0]));
             if (response == null) {
                 throw new WrongUsageException("advisor.value.notFound", args[0]);
             } else {

@@ -1,6 +1,6 @@
 package com.teamacronymcoders.advisor.json;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -43,22 +45,22 @@ public class JsonLoader<T> {
         this.gson = new GsonBuilder().registerTypeAdapter(tClass, deserializer).create();
     }
 
-    public List<T> load() {
+    public List<Map.Entry<ResourceLocation, T>> load() {
         return Loader.instance().getActiveModList()
                 .parallelStream()
                 .map(this::loadFilesForMod)
-                .flatMap(List::stream)
+                .flatMap(map -> map.entrySet().stream())
                 .collect(Collectors.toList());
     }
 
-    private List<T> loadFilesForMod(ModContainer modContainer) {
+    private Map<ResourceLocation, T> loadFilesForMod(ModContainer modContainer) {
         JsonContext ctx = new JsonContext(modContainer.getModId());
-        List<T> loadedObjects = Lists.newArrayList();
+        Map<ResourceLocation, T> loadedObjects = Maps.newHashMap();
         CraftingHelper.findFiles(modContainer, "assets/" + modContainer.getModId() + folders,
                 this::handlePreload,
                 (root, file) -> {
                     this.handleFile(root, file, ctx)
-                            .ifPresent(loadedObjects::add);
+                            .ifPresent(pair -> loadedObjects.put(pair.getKey(), pair.getValue()));
                     return true;
                 }, true, true);
 
@@ -69,7 +71,7 @@ public class JsonLoader<T> {
         return true;
     }
 
-    protected Optional<T> handleFile(Path root, Path file, JsonContext context) {
+    protected Optional<Pair<ResourceLocation, T>> handleFile(Path root, Path file, JsonContext context) {
         String relative = root.relativize(file).toString();
         if (!"json".equals(FilenameUtils.getExtension(file.toString())) || relative.startsWith("_"))
             return Optional.empty();
@@ -83,14 +85,14 @@ public class JsonLoader<T> {
                 ((IForgeRegistryEntry) value).setRegistryName(key);
             }
         });
-        return object;
+        return object.map(value -> Pair.of(key, value));
     }
 
     protected Optional<T> handleFile(ResourceLocation key, Path file) {
         try (BufferedReader bufferedReader = Files.newBufferedReader(file)) {
             return Optional.ofNullable(gson.fromJson(bufferedReader, tClass));
         } catch (IOException | JsonParseException e) {
-            logger.get().warn("Failed to load File for key: " + key, file);
+            logger.get().warn("Failed to load File for key: " + key, e);
             return Optional.empty();
         }
     }

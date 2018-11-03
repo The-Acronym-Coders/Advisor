@@ -1,21 +1,27 @@
 package com.teamacronymcoders.advisor.speech.sound;
 
 import com.google.gson.annotations.JsonAdapter;
-import com.teamacronymcoders.advisor.api.speech.IResponse;
-import com.teamacronymcoders.advisor.json.SoundEventLazyLoadedDeserializer;
+import com.teamacronymcoders.advisor.api.speech.Response;
 import com.teamacronymcoders.advisor.json.SoundEventLazyLoadedType;
+import com.teamacronymcoders.advisor.json.constructor.ConstructorDeserializer;
+import com.teamacronymcoders.advisor.json.constructor.JsonConstructor;
+import com.teamacronymcoders.advisor.json.constructor.JsonProperty;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class SoundResponse extends IForgeRegistryEntry.Impl<IResponse> implements IResponse {
-    @JsonAdapter(SoundEventLazyLoadedDeserializer.class)
+import java.util.Optional;
+
+@JsonAdapter(ConstructorDeserializer.class)
+public class SoundResponse extends Response {
     private final SoundEventLazyLoadedType sound;
     private final boolean playerOnly;
 
-    public SoundResponse(SoundEventLazyLoadedType sound, boolean playerOnly) {
-        this.sound = sound;
-        this.playerOnly = playerOnly;
+    @JsonConstructor
+    public SoundResponse(@JsonProperty(value = "sound", required = true) String sound,
+                         @JsonProperty(value = "playerOnly") Boolean playerOnly) {
+        this.sound = new SoundEventLazyLoadedType(sound);
+        this.playerOnly = Optional.ofNullable(playerOnly)
+                .orElse(true);
     }
 
     @Override

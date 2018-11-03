@@ -1,14 +1,19 @@
 package com.teamacronymcoders.advisor.speech.text;
 
-import com.teamacronymcoders.advisor.api.speech.IResponse;
+import com.google.gson.annotations.JsonAdapter;
+import com.teamacronymcoders.advisor.api.speech.Response;
+import com.teamacronymcoders.advisor.json.constructor.ConstructorDeserializer;
+import com.teamacronymcoders.advisor.json.constructor.JsonConstructor;
+import com.teamacronymcoders.advisor.json.constructor.JsonProperty;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class LangResponse extends IForgeRegistryEntry.Impl<IResponse> implements IResponse {
+@JsonAdapter(ConstructorDeserializer.class)
+public class LangResponse extends Response {
     private final String langKey;
 
-    public LangResponse(String langKey) {
+    @JsonConstructor
+    public LangResponse(@JsonProperty(value = "langKey", required = true) String langKey) {
         this.langKey = langKey;
     }
 

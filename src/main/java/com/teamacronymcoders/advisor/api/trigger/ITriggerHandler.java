@@ -1,6 +1,6 @@
 package com.teamacronymcoders.advisor.api.trigger;
 
-import com.teamacronymcoders.advisor.api.speech.IResponse;
+import com.teamacronymcoders.advisor.api.speech.Response;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -10,8 +10,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface ITriggerHandler extends IForgeRegistryEntry<ITriggerHandler> {
-    default Optional<IResponse> trigger(EntityPlayer entityPlayer) {
-        List<IResponse> responses = this.getPossibleResponses(entityPlayer);
+    default Optional<Response> trigger(EntityPlayer entityPlayer) {
+        List<Response> responses = this.getPossibleResponses(entityPlayer);
         if (!responses.isEmpty()) {
             return Optional.of(responses.get(entityPlayer.getEntityWorld().rand.nextInt(responses.size())));
         }
@@ -20,11 +20,11 @@ public interface ITriggerHandler extends IForgeRegistryEntry<ITriggerHandler> {
 
     void clearResponses();
 
-    void addResponse(IResponse response, @Nullable ITriggerInfo triggerInfo);
+    void addResponse(Response response, @Nullable ITriggerInfo triggerInfo);
 
-    List<IResponse> getAllResponses();
+    List<Response> getAllResponses();
 
-    default List<IResponse> getPossibleResponses(EntityPlayer entityPlayer) {
+    default List<Response> getPossibleResponses(EntityPlayer entityPlayer) {
         return this.getAllResponses().parallelStream()
                 .filter(response -> response.canRespond(entityPlayer))
                 .collect(Collectors.toList());

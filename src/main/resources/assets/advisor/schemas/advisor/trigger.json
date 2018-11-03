@@ -1,0 +1,42 @@
+{
+  "$id": "https://schemas.teamacronymcoders.com/advisor/responses.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "description": "Advisor Trigger Format",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "properties": {
+      "triggerHandler": {
+        "$ref": "https://raw.githubusercontent.com/Levertion/minecraft-json-schema/master/java/shared/namespaced_location.json"
+      },
+      "responses": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "$ref": "https://raw.githubusercontent.com/Levertion/minecraft-json-schema/master/java/shared/namespaced_location.json"
+        }
+      },
+      "triggerInfo": {
+        "anyOf": [
+          {
+            "properties": {
+              "weight": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "weight"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "triggerHandler",
+      "responses"
+    ],
+    "additionalProperties": false
+  }
+}

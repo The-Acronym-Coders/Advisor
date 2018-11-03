@@ -1,2 +1,3 @@
 advisor.command.respond=/advisor respond <response> [force]
 advisor.lang.intro=HELLO WORLD
+advisor.response.test=Testing new
