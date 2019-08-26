@@ -1,13 +1,10 @@
 package com.teamacronymcoders.advisor.api.data;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.INBTSerializable;
 
-public interface IAdvisorData {
+public interface IAdvisorData extends INBTSerializable<CompoundNBT> {
     boolean hasReceivedIntro();
 
     void setHasReceivedIntro(boolean receivedIntro);
-
-    void loadFromNBT(NBTTagCompound nbtTagCompound);
-
-    NBTTagCompound saveToNBT();
 }

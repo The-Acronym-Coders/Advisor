@@ -1,23 +1,33 @@
 package com.teamacronymcoders.advisor.api.trigger;
 
-import com.google.gson.annotations.JsonAdapter;
-import com.teamacronymcoders.advisor.json.constructor.ConstructorDeserializer;
-import com.teamacronymcoders.advisor.json.constructor.JsonConstructor;
-import com.teamacronymcoders.advisor.json.constructor.JsonProperty;
-import net.minecraft.util.ResourceLocation;
+import com.teamacronymcoders.advisor.api.response.Response;
+import com.teamacronymcoders.advisor.api.weightedlist.WeightedList;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
-@JsonAdapter(ConstructorDeserializer.class)
-public class Trigger {
-    public final ResourceLocation triggerHandler;
-    public final ResourceLocation[] responses;
-    public final ITriggerInfo triggerInfo;
+import javax.annotation.Nullable;
 
-    @JsonConstructor
-    public Trigger(@JsonProperty(value = "triggerHandler", required = true) ResourceLocation triggerHandler,
-                   @JsonProperty(value = "responses", required = true) ResourceLocation[] responses,
-                   @JsonProperty(value = "triggerInfo") ITriggerInfo triggerInfo) {
-        this.triggerHandler = triggerHandler;
-        this.responses = responses;
-        this.triggerInfo = triggerInfo;
+public class Trigger extends ForgeRegistryEntry<Trigger> {
+    private final WeightedList<TriggerableResponse, TriggerableResponse> list;
+
+    public Trigger() {
+        this.list = new WeightedList<>();
+    }
+
+    @Nullable
+    public Response trigger(PlayerEntity playerEntity) {
+        TriggerableResponse triggerableResponse = this.list.next(playerEntity);
+        if (triggerableResponse != null) {
+            return triggerableResponse.handleResponse(playerEntity);
+        }
+        return null;
+    }
+
+    public void add(TriggerableResponse triggerableResponse) {
+        list.add(triggerableResponse);
+    }
+
+    public void clear() {
+        list.clear();
     }
 }

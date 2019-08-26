@@ -1,8 +1,8 @@
 package com.teamacronymcoders.advisor.api.data;
 
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -14,13 +14,13 @@ public class CapAdvisorData {
     public static void register() {
         CapabilityManager.INSTANCE.register(IAdvisorData.class, new Capability.IStorage<IAdvisorData>() {
             @Override
-            public NBTTagCompound writeNBT(Capability<IAdvisorData> capability, IAdvisorData instance, EnumFacing side) {
-                return instance.saveToNBT();
+            public CompoundNBT writeNBT(Capability<IAdvisorData> capability, IAdvisorData instance, Direction direction) {
+                return instance.serializeNBT();
             }
 
             @Override
-            public void readNBT(Capability<IAdvisorData> capability, IAdvisorData instance, EnumFacing side, NBTBase nbt) {
-                instance.loadFromNBT((NBTTagCompound) nbt);
+            public void readNBT(Capability<IAdvisorData> capability, IAdvisorData instance, Direction direction, INBT nbt) {
+                instance.deserializeNBT((CompoundNBT) nbt);
             }
         }, AdvisorData::new);
     }

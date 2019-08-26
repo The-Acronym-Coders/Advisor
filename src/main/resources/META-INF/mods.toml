@@ -1,0 +1,12 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+issueTrackerURL="https://github.com/The-Acronym-Coders/Advisor/issues"
+
+[[mods]]
+    modId="advisor"
+    version="${file.jarVersion}"
+    displayName="Advisor"
+    authors="SkySom"
+    description='''
+        Adds a voice to the game.
+    '''

@@ -1,8 +1,0 @@
-[
-  {
-    "triggerHandler": "advisor:introduction",
-    "responses": [
-      "advisor:intro_voice"
-    ]
-  }
-]

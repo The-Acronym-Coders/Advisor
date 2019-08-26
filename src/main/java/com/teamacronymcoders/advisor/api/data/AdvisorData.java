@@ -1,6 +1,6 @@
 package com.teamacronymcoders.advisor.api.data;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 public class AdvisorData implements IAdvisorData {
     private boolean receivedIntro;
@@ -16,13 +16,13 @@ public class AdvisorData implements IAdvisorData {
     }
 
     @Override
-    public void loadFromNBT(NBTTagCompound nbtTagCompound) {
-        this.setHasReceivedIntro(nbtTagCompound.getBoolean("receivedIntro"));
+    public void deserializeNBT(CompoundNBT CompoundNBT) {
+        this.setHasReceivedIntro(CompoundNBT.getBoolean("receivedIntro"));
     }
 
     @Override
-    public NBTTagCompound saveToNBT() {
-        return new NBTTagCompoundBuilder()
+    public CompoundNBT serializeNBT() {
+        return new CompoundNBTBuilder()
                 .withBoolean("receivedIntro", this.hasReceivedIntro())
                 .create();
     }
