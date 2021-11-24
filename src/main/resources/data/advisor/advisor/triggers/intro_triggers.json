@@ -1,6 +1,0 @@
-{
-  "type": "advisor:intro",
-  "responses": [
-    "advisor:hello_text"
-  ]
-}

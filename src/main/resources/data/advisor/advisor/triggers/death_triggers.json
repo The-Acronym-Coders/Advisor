@@ -1,6 +1,0 @@
-{
-  "type": "advisor:death",
-  "responses": [
-    "advisor:death_text"
-  ]
-}
