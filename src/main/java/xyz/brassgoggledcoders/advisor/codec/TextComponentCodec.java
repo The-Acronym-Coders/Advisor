@@ -18,6 +18,7 @@ public class TextComponentCodec implements Codec<ITextComponent> {
                 .map(Objects::toString)
                 .flatMap(string -> {
                     try {
+                        string = string.substring(8, string.length() - 1);
                         return DataResult.success(Pair.of(
                                 ITextComponent.Serializer.fromJsonLenient(string),
                                 ops.empty())

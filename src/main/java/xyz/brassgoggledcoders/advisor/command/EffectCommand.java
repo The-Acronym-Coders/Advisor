@@ -28,7 +28,7 @@ public class EffectCommand {
                                     } else {
                                         players.forEach(effect::perform);
                                         context.getSource()
-                                                .sendSuccess(new StringTextComponent("Effected " + players.size() + " pLayers"), false);
+                                                .sendSuccess(new StringTextComponent("Effected " + players.size() + " players"), false);
                                         return players.size();
                                     }
                                 })
