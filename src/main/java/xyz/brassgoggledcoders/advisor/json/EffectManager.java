@@ -45,6 +45,7 @@ public class EffectManager extends JsonReloadListener implements IEffectManager 
     @Override
     @ParametersAreNonnullByDefault
     protected void apply(Map<ResourceLocation, JsonElement> pObject, IResourceManager pResourceManager, IProfiler pProfiler) {
+        effects.clear();
         for (Entry<ResourceLocation, JsonElement> entry : pObject.entrySet()) {
             ResourceLocation id = entry.getKey();
             JsonElement element = entry.getValue();
