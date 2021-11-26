@@ -20,7 +20,7 @@ public class TextComponentCodec implements Codec<ITextComponent> {
                     try {
                         string = string.substring(8, string.length() - 1);
                         return DataResult.success(Pair.of(
-                                ITextComponent.Serializer.fromJsonLenient(string),
+                                ITextComponent.Serializer.fromJson(string),
                                 ops.empty())
                         );
                     } catch (JsonParseException e) {

@@ -4,13 +4,10 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.command.arguments.ResourceLocationArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
-import xyz.brassgoggledcoders.advisor.api.AdvisorAPI;
 import xyz.brassgoggledcoders.advisor.api.effect.Effect;
 import xyz.brassgoggledcoders.advisor.command.argument.EffectArgumentType;
-import xyz.brassgoggledcoders.advisor.content.AdvisorArgumentTypes;
 
 import java.util.Collection;
 
