@@ -6,6 +6,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.brassgoggledcoders.advisor.api.AdvisorAPI;
+import xyz.brassgoggledcoders.advisor.content.AdvisorArgumentTypes;
 import xyz.brassgoggledcoders.advisor.content.AdvisorEffectTypes;
 import xyz.brassgoggledcoders.advisor.json.EffectManager;
 
@@ -20,6 +21,7 @@ public class Advisor {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         AdvisorEffectTypes.setup(modEventBus);
+        AdvisorArgumentTypes.setup();
 
         AdvisorAPI.setEffectManager(effectManager);
     }

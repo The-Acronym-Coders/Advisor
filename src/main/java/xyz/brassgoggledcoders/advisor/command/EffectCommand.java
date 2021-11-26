@@ -9,6 +9,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import xyz.brassgoggledcoders.advisor.api.AdvisorAPI;
 import xyz.brassgoggledcoders.advisor.api.effect.Effect;
+import xyz.brassgoggledcoders.advisor.command.argument.EffectArgumentType;
+import xyz.brassgoggledcoders.advisor.content.AdvisorArgumentTypes;
 
 import java.util.Collection;
 
@@ -16,21 +18,14 @@ public class EffectCommand {
     public static LiteralArgumentBuilder<CommandSource> create() {
         return Commands.literal("effect")
                 .then(Commands.argument("targets", EntityArgument.players())
-                        .then(Commands.argument("effect", ResourceLocationArgument.id())
+                        .then(Commands.argument("effect", EffectArgumentType.effect())
                                 .executes(context -> {
                                     Collection<ServerPlayerEntity> players = EntityArgument.getPlayers(context, "targets");
-                                    Effect effect = AdvisorAPI.getEffectManager()
-                                            .getEffect(ResourceLocationArgument.getId(context, "effect"));
-                                    if (effect == null) {
-                                        context.getSource()
-                                                .sendFailure(new StringTextComponent("No Effect Found"));
-                                        return 0;
-                                    } else {
-                                        players.forEach(effect::perform);
-                                        context.getSource()
-                                                .sendSuccess(new StringTextComponent("Effected " + players.size() + " players"), false);
-                                        return players.size();
-                                    }
+                                    Effect effect = EffectArgumentType.get(context, "effect");
+                                    players.forEach(effect::perform);
+                                    context.getSource()
+                                            .sendSuccess(new StringTextComponent("Effected " + players.size() + " players"), false);
+                                    return players.size();
                                 })
                         )
                 );

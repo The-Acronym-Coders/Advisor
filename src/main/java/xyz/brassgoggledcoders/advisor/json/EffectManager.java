@@ -17,8 +17,10 @@ import xyz.brassgoggledcoders.advisor.content.AdvisorEffectTypes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class EffectManager extends JsonReloadListener implements IEffectManager {
     private static final Codec<Effect> CODEC = AdvisorEffectTypes.CODEC.dispatch(
@@ -40,6 +42,28 @@ public class EffectManager extends JsonReloadListener implements IEffectManager 
     @Override
     public Effect getEffect(@Nonnull ResourceLocation id) {
         return effects.get(id);
+    }
+
+    @Override
+    @Nonnull
+    public Collection<Effect> getEffects() {
+        return effects.values();
+    }
+
+    @Nonnull
+    @Override
+    public Collection<ResourceLocation> getIds() {
+        return effects.keySet();
+    }
+
+    @Nonnull
+    @Override
+    public Collection<String> getExamples() {
+        return effects.keySet()
+                .parallelStream()
+                .limit(5)
+                .map(ResourceLocation::toString)
+                .collect(Collectors.toSet());
     }
 
     @Override
