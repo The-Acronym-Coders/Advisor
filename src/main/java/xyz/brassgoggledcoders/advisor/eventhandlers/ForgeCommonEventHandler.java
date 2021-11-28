@@ -6,6 +6,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import xyz.brassgoggledcoders.advisor.Advisor;
+import xyz.brassgoggledcoders.advisor.api.AdvisorAPI;
 import xyz.brassgoggledcoders.advisor.command.EffectCommand;
 
 @EventBusSubscriber(modid = Advisor.ID)
@@ -13,7 +14,8 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void addReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(Advisor.effectManager);
+        event.addListener(AdvisorAPI.getEffectManager());
+        event.addListener(AdvisorAPI.getCauseManager());
     }
 
     @SubscribeEvent

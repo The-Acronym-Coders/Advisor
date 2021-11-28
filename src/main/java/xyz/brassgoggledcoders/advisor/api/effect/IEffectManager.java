@@ -1,12 +1,13 @@
 package xyz.brassgoggledcoders.advisor.api.effect;
 
+import net.minecraft.resources.IFutureReloadListener;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public interface IEffectManager {
+public interface IEffectManager extends IFutureReloadListener {
     @Nullable
     Effect getEffect(@Nonnull ResourceLocation resourceLocation);
 

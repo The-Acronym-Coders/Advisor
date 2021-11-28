@@ -1,4 +1,4 @@
-package xyz.brassgoggledcoders.advisor.json;
+package xyz.brassgoggledcoders.advisor.effect;
 
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -9,11 +9,11 @@ import net.minecraft.client.resources.JsonReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-import xyz.brassgoggledcoders.advisor.Advisor;
+import xyz.brassgoggledcoders.advisor.api.AdvisorAPI;
+import xyz.brassgoggledcoders.advisor.api.AdvisorCodecs;
 import xyz.brassgoggledcoders.advisor.api.effect.Effect;
 import xyz.brassgoggledcoders.advisor.api.effect.EffectType;
 import xyz.brassgoggledcoders.advisor.api.effect.IEffectManager;
-import xyz.brassgoggledcoders.advisor.content.AdvisorEffectTypes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -23,7 +23,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class EffectManager extends JsonReloadListener implements IEffectManager {
-    private static final Codec<Effect> CODEC = AdvisorEffectTypes.CODEC.dispatch(
+    private static final Codec<Effect> CODEC = AdvisorCodecs.EFFECT_TYPE_CODEC.dispatch(
             "type",
             Effect::getType,
             EffectType::getCodec
@@ -32,7 +32,6 @@ public class EffectManager extends JsonReloadListener implements IEffectManager 
     private static final Gson GSON = new Gson();
 
     private final Map<ResourceLocation, Effect> effects;
-
 
     public EffectManager() {
         super(GSON, "advisor/effect");
@@ -74,7 +73,7 @@ public class EffectManager extends JsonReloadListener implements IEffectManager 
             ResourceLocation id = entry.getKey();
             JsonElement element = entry.getValue();
             CODEC.parse(JsonOps.INSTANCE, element)
-                    .resultOrPartial(error -> Advisor.LOGGER.error("Failed to Parse {}: {}", id, error))
+                    .resultOrPartial(error -> AdvisorAPI.LOGGER.error("Failed to Parse {}: {}", id, error))
                     .ifPresent(effect -> {
                         effect.setId(id);
                         effects.put(id, effect);
