@@ -7,6 +7,7 @@ import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import xyz.brassgoggledcoders.advisor.api.effect.Effect;
+import xyz.brassgoggledcoders.advisor.api.effect.EffectContext;
 import xyz.brassgoggledcoders.advisor.command.argument.EffectArgumentType;
 
 import java.util.Collection;
@@ -19,9 +20,13 @@ public class EffectCommand {
                                 .executes(context -> {
                                     Collection<ServerPlayerEntity> players = EntityArgument.getPlayers(context, "targets");
                                     Effect effect = EffectArgumentType.get(context, "effect");
-                                    players.forEach(effect::perform);
+                                    int effected = players.stream()
+                                            .map(EffectContext::new)
+                                            .map(effect::perform)
+                                            .mapToInt(performed -> performed ? 1 : 0)
+                                            .sum();
                                     context.getSource()
-                                            .sendSuccess(new StringTextComponent("Effected " + players.size() + " players"), false);
+                                            .sendSuccess(new StringTextComponent("Effected " + effected + " players"), false);
                                     return players.size();
                                 })
                         )

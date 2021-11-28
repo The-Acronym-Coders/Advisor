@@ -10,7 +10,7 @@ public abstract class Effect {
 
     }
 
-    public abstract void perform(PlayerEntity player);
+    public abstract boolean perform(EffectContext context);
 
     public ResourceLocation getId() {
         return id;

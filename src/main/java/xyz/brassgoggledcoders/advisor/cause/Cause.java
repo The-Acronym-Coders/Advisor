@@ -1,27 +1,22 @@
 package xyz.brassgoggledcoders.advisor.cause;
 
-import net.minecraft.entity.player.PlayerEntity;
+import xyz.brassgoggledcoders.advisor.api.cause.CauseContext;
 import xyz.brassgoggledcoders.advisor.api.cause.ICause;
-import xyz.brassgoggledcoders.advisor.api.effect.Effect;
+import xyz.brassgoggledcoders.advisor.api.effect.EffectContext;
+import xyz.brassgoggledcoders.advisor.effecttable.EffectTable;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 
 public class Cause implements ICause {
-    private final Collection<Effect> effects;
+    private final EffectTable effectTable;
 
-    public Cause(Collection<Effect> effects) {
-        this.effects = effects;
+    public Cause(EffectTable effectTable) {
+        this.effectTable = effectTable;
     }
 
     @Override
-    @Nonnull
-    public Collection<Effect> getEffects() {
-        return this.effects;
-    }
-
-    @Override
-    public void perform(@Nonnull PlayerEntity player) {
-
+    public void perform(@Nonnull CauseContext context) {
+        this.effectTable.getEffects(EffectContext.fromCauseContext(context))
+                .forEach(effect -> effect.perform(context.getPlayer()));
     }
 }
