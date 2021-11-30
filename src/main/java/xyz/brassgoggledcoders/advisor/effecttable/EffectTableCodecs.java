@@ -61,7 +61,7 @@ public class EffectTableCodecs {
     ).apply(instance, EffectTable::new));
 
     public static final Codec<IEffectTable> GET_OR_BUILD_EFFECT_TABLE = new BuildOrGetCodec<>(
-            AdvisorAPI.getEffectTableManager()::getValue,
+            id -> AdvisorAPI.getEffectTableManager().getValue(id),
             TABLE.flatXmap(
                     DataResult::success,
                     effectTable -> {
