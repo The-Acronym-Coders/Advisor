@@ -7,15 +7,18 @@ import net.minecraft.client.resources.JsonReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import xyz.brassgoggledcoders.advisor.api.manager.IManager;
 import xyz.brassgoggledcoders.advisor.api.cause.ICause;
-import xyz.brassgoggledcoders.advisor.api.cause.ICauseManager;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-public class CauseManager extends JsonReloadListener implements ICauseManager {
+public class CauseManager extends JsonReloadListener implements IManager<ICause> {
     private static final Gson GSON = new Gson();
     private static final String DIRECTORY = "advisor/cause";
     private static final Predicate<String> JSON_FILE = (fileName) -> fileName.endsWith(".json");
@@ -33,10 +36,25 @@ public class CauseManager extends JsonReloadListener implements ICauseManager {
 
     }
 
-
     @Nullable
     @Override
-    public ICause getCause(ResourceLocation id) {
-        return this.causes.get(id);
+    public ICause getValue(@Nonnull ResourceLocation resourceLocation) {
+        return causes.get(resourceLocation);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<ResourceLocation> getIds() {
+        return causes.keySet();
+    }
+
+    @Nonnull
+    @Override
+    public Collection<String> getExamples() {
+        return causes.keySet()
+                .parallelStream()
+                .map(ResourceLocation::toString)
+                .limit(5)
+                .collect(Collectors.toSet());
     }
 }

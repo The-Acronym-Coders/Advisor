@@ -1,11 +1,14 @@
 package xyz.brassgoggledcoders.advisor.effecttable;
 
+import com.google.common.collect.Lists;
 import net.minecraft.loot.IRandomRange;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.RandomValueRange;
 import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.loot.conditions.LootConditionManager;
 import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.apache.commons.lang3.tuple.Pair;
 import xyz.brassgoggledcoders.advisor.api.effect.Effect;
 import xyz.brassgoggledcoders.advisor.api.effect.EffectContext;
 
@@ -29,16 +32,69 @@ public class EffectPool {
         this.bonusRolls = bonusRolls;
     }
 
-    public void getEffects(EffectContext context, Consumer<Effect> effectConsumer) {
+    public void validate(EffectValidationTracker tracker) {
+        for (int i = 0; i < this.conditions.size(); ++i) {
+            this.conditions.get(i).validate(tracker.forLootChild(".condition[" + i + "]"));
+        }
+
+        if (this.effectEntries.isEmpty()) {
+            tracker.reportProblem("'entries' is empty");
+        }
+
+        for (int i = 0; i < this.effectEntries.size(); ++i) {
+            this.effectEntries.get(i).validate(tracker.forChild(".entries[" + i + "]"));
+        }
+    }
+
+    public void gatherEffects(EffectContext context, Consumer<Effect> gatherer) {
         if (this.compositeConditions.test(context.getLootContext())) {
             Random random = context.getLootContext().getRandom();
-            int i = this.rolls.getInt(random) + MathHelper.floor(this.bonusRolls.getFloat(random) * context.getLootContext().getLuck());
+            int rolls = this.rolls.getInt(random) + MathHelper.floor(this.bonusRolls.getFloat(random) * context.getLootContext().getLuck());
 
-
-            for (int j = 0; j < i; ++j) {
-                this.addRandomItem(consumer, pLootContext);
+            List<Pair<Effect, Integer>> effects = Lists.newArrayList();
+            MutableInt totalWeight = new MutableInt(0);
+            for (EffectEntry entry : effectEntries) {
+                Effect effect = entry.getEffectFromContext(context);
+                if (effect != null) {
+                    int weight = entry.getLuckyWeight(context.getLootContext().getLuck());
+                    effects.add(Pair.of(effect, weight));
+                    totalWeight.add(weight);
+                }
             }
 
+            for (int i = 0; i < rolls; ++i) {
+                int effectSize = effects.size();
+                if (totalWeight.intValue() != 0 && effectSize != 0) {
+                    if (effectSize == 1) {
+                        gatherer.accept(effects.get(0).getLeft());
+                    } else {
+                        int nextWeight = random.nextInt(totalWeight.intValue());
+
+                        for (Pair<Effect, Integer> effect : effects) {
+                            nextWeight -= effect.getRight();
+                            if (nextWeight < 0) {
+                                gatherer.accept(effect.getLeft());
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
+
+    public List<EffectEntry> getEffectEntries() {
+        return effectEntries;
+    }
+
+    public List<ILootCondition> getConditions() {
+        return conditions;
+    }
+
+    public IRandomRange getRolls() {
+        return rolls;
+    }
+
+    public RandomValueRange getBonusRolls() {
+        return bonusRolls;
     }
 }

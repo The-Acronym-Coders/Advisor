@@ -10,6 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
+import xyz.brassgoggledcoders.advisor.api.manager.IManager;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -19,6 +20,12 @@ public abstract class ManagerEntryArgumentType<T> implements ArgumentType<T> {
     public static final DynamicCommandExceptionType ERROR_UNKNOWN_VALUE = new DynamicCommandExceptionType(
             (name) -> new TranslationTextComponent("argument.advisor.id.invalid", name)
     );
+
+    private final IManager<T> manager;
+
+    public ManagerEntryArgumentType(IManager<T> manager) {
+        this.manager = manager;
+    }
 
     @Override
     public T parse(StringReader reader) throws CommandSyntaxException {
@@ -33,13 +40,15 @@ public abstract class ManagerEntryArgumentType<T> implements ArgumentType<T> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggestResource(this.getIds(), builder);
+        return ISuggestionProvider.suggestResource(this.manager.getIds(), builder);
     }
 
     @Override
-    public abstract Collection<String> getExamples();
+    public Collection<String> getExamples() {
+        return this.manager.getExamples();
+    }
 
-    public abstract Collection<ResourceLocation> getIds();
-
-    public abstract Optional<T> getValue(ResourceLocation id);
+    public Optional<T> getValue(ResourceLocation id) {
+        return Optional.ofNullable(this.manager.getValue(id));
+    }
 }

@@ -5,11 +5,12 @@ import net.minecraft.util.ResourceLocation;
 import xyz.brassgoggledcoders.advisor.Advisor;
 import xyz.brassgoggledcoders.advisor.api.effect.Effect;
 import xyz.brassgoggledcoders.advisor.api.effect.EffectContext;
+import xyz.brassgoggledcoders.advisor.api.effecttable.IEffectTable;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-public class EffectTable {
+public class EffectTable implements IEffectTable {
     private final ResourceLocation id;
     private final LootParameterSet parameterSet;
     private final List<EffectPool> effectPools;
@@ -20,13 +21,23 @@ public class EffectTable {
         this.effectPools = effectPools;
     }
 
-    public void getEffects(EffectContext context, Consumer<Effect> effectConsumer) {
+    @Override
+    public void gatherEffects(EffectContext context, Consumer<Effect> effectConsumer) {
         if (context.visitTable(this)) {
             for (EffectPool effectPool : effectPools) {
-                effectPool.getEffects(context, effectConsumer);
+                effectPool.gatherEffects(context, effectConsumer);
             }
         } else {
             Advisor.LOGGER.error("Found infinite loop in LootTable: " + this.getId());
+        }
+    }
+
+    public void validate(EffectValidationTracker validationTracker) {
+        if (this.effectPools.isEmpty()) {
+            validationTracker.reportProblem("'pools' is empty");
+        }
+        for (int i = 0; i < this.effectPools.size(); ++i) {
+            this.effectPools.get(i).validate(validationTracker.forChild(".pools[" + i + "]"));
         }
     }
 
@@ -36,5 +47,9 @@ public class EffectTable {
 
     public LootParameterSet getParameterSet() {
         return parameterSet;
+    }
+
+    public List<EffectPool> getPools() {
+        return effectPools;
     }
 }

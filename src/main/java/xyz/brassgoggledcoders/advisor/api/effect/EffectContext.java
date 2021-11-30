@@ -1,6 +1,7 @@
 package xyz.brassgoggledcoders.advisor.api.effect;
 
 import com.google.common.collect.Sets;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameterSets;
@@ -12,12 +13,18 @@ import java.util.Set;
 public class EffectContext {
     private final NonNullLazy<LootContext> lootContext;
     private final Set<Object> visitedTables;
+    private final ServerPlayerEntity player;
 
     public EffectContext(ServerPlayerEntity player) {
         this.lootContext = NonNullLazy.of(() -> new LootContext.Builder(player.getLevel())
-                .create(LootParameterSets.ALL_PARAMS)
+                .create(LootParameterSets.EMPTY)
         );
         this.visitedTables = Sets.newHashSet();
+        this.player = player;
+    }
+
+    public ServerPlayerEntity getPlayer() {
+        return this.player;
     }
 
     public LootContext getLootContext() {
