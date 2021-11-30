@@ -1,14 +1,18 @@
 package xyz.brassgoggledcoders.advisor.effecttable;
 
 import net.minecraft.loot.LootParameterSet;
+import net.minecraft.loot.LootParameterSets;
 import net.minecraft.util.ResourceLocation;
 import xyz.brassgoggledcoders.advisor.Advisor;
 import xyz.brassgoggledcoders.advisor.api.effect.Effect;
 import xyz.brassgoggledcoders.advisor.api.effect.EffectContext;
+import xyz.brassgoggledcoders.advisor.api.effecttable.EffectValidationTracker;
 import xyz.brassgoggledcoders.advisor.api.effecttable.IEffectTable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class EffectTable implements IEffectTable {
     private final ResourceLocation id;
@@ -19,6 +23,16 @@ public class EffectTable implements IEffectTable {
         this.id = id;
         this.parameterSet = parameterSet;
         this.effectPools = effectPools;
+    }
+
+    public EffectTable(List<Effect> effects) {
+        this(null, LootParameterSets.ALL_PARAMS, Collections.singletonList(
+                new EffectPool(
+                        effects.stream()
+                                .map(EffectEntry::new)
+                                .collect(Collectors.toList())
+                )
+        ));
     }
 
     @Override

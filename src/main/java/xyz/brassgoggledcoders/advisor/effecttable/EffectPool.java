@@ -1,6 +1,7 @@
 package xyz.brassgoggledcoders.advisor.effecttable;
 
 import com.google.common.collect.Lists;
+import net.minecraft.loot.ConstantRange;
 import net.minecraft.loot.IRandomRange;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.RandomValueRange;
@@ -11,7 +12,9 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 import xyz.brassgoggledcoders.advisor.api.effect.Effect;
 import xyz.brassgoggledcoders.advisor.api.effect.EffectContext;
+import xyz.brassgoggledcoders.advisor.api.effecttable.EffectValidationTracker;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -30,6 +33,10 @@ public class EffectPool {
         this.compositeConditions = LootConditionManager.andConditions(conditions.toArray(new ILootCondition[0]));
         this.rolls = rolls;
         this.bonusRolls = bonusRolls;
+    }
+
+    public EffectPool(List<EffectEntry> effectEntries) {
+        this(effectEntries, Collections.emptyList(), ConstantRange.exactly(1), RandomValueRange.between(0, 0));
     }
 
     public void validate(EffectValidationTracker tracker) {

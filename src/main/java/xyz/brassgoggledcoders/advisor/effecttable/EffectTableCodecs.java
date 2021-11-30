@@ -2,12 +2,14 @@ package xyz.brassgoggledcoders.advisor.effecttable;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.loot.*;
 import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.util.ResourceLocation;
 import xyz.brassgoggledcoders.advisor.api.AdvisorAPI;
 import xyz.brassgoggledcoders.advisor.api.effect.Effect;
+import xyz.brassgoggledcoders.advisor.api.effecttable.IEffectTable;
 import xyz.brassgoggledcoders.advisor.codec.BuildOrGetCodec;
 import xyz.brassgoggledcoders.advisor.codec.GsonCodec;
 import xyz.brassgoggledcoders.advisor.content.AdvisorEffectTypes;
@@ -57,4 +59,18 @@ public class EffectTableCodecs {
             LOOT_PARAMETER_SET.fieldOf("type").orElse(LootParameterSets.ALL_PARAMS).forGetter(EffectTable::getParameterSet),
             Codec.list(POOL).fieldOf("pools").forGetter(EffectTable::getPools)
     ).apply(instance, EffectTable::new));
+
+    public static final Codec<IEffectTable> GET_OR_BUILD_EFFECT_TABLE = new BuildOrGetCodec<>(
+            AdvisorAPI.getEffectTableManager()::getValue,
+            TABLE.flatXmap(
+                    DataResult::success,
+                    effectTable -> {
+                        if (effectTable instanceof EffectTable) {
+                            return DataResult.success((EffectTable) effectTable);
+                        } else {
+                            return DataResult.error(effectTable.toString() + " is not EffectTable");
+                        }
+                    }
+            )
+    );
 }

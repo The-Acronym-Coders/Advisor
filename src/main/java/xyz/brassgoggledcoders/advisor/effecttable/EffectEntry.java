@@ -6,7 +6,9 @@ import net.minecraft.loot.conditions.LootConditionManager;
 import net.minecraft.util.math.MathHelper;
 import xyz.brassgoggledcoders.advisor.api.effect.Effect;
 import xyz.brassgoggledcoders.advisor.api.effect.EffectContext;
+import xyz.brassgoggledcoders.advisor.api.effecttable.EffectValidationTracker;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -23,6 +25,10 @@ public class EffectEntry {
         this.conditions = conditions;
         this.compositeCondition = LootConditionManager.andConditions(this.conditions.toArray(new ILootCondition[0]));
         this.effect = effect;
+    }
+
+    public EffectEntry(Effect effect) {
+        this(1, 0, Collections.emptyList(), effect);
     }
 
     public List<ILootCondition> getConditions() {

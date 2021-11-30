@@ -1,7 +1,6 @@
 package xyz.brassgoggledcoders.advisor.api.effect;
 
 import com.google.common.collect.Sets;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameterSets;
@@ -23,6 +22,12 @@ public class EffectContext {
         this.player = player;
     }
 
+    public EffectContext(ServerPlayerEntity player, LootContext lootContext) {
+        this.lootContext = NonNullLazy.of(() -> lootContext);
+        this.visitedTables = Sets.newHashSet();
+        this.player = player;
+    }
+
     public ServerPlayerEntity getPlayer() {
         return this.player;
     }
@@ -36,6 +41,6 @@ public class EffectContext {
     }
 
     public static EffectContext fromCauseContext(CauseContext context) {
-        return new EffectContext(context.getPlayer());
+        return new EffectContext(context.getPlayer(), context.getLootContext());
     }
 }

@@ -3,6 +3,7 @@ package xyz.brassgoggledcoders.advisor.effecttable;
 import net.minecraft.loot.LootParameterSets;
 import net.minecraft.loot.LootPredicateManager;
 import xyz.brassgoggledcoders.advisor.Advisor;
+import xyz.brassgoggledcoders.advisor.api.effecttable.EffectValidationTracker;
 import xyz.brassgoggledcoders.advisor.api.effecttable.IEffectTable;
 import xyz.brassgoggledcoders.advisor.codec.CodecReloadListener;
 

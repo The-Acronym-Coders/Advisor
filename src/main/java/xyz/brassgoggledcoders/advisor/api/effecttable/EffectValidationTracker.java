@@ -1,4 +1,4 @@
-package xyz.brassgoggledcoders.advisor.effecttable;
+package xyz.brassgoggledcoders.advisor.api.effecttable;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMultimap;

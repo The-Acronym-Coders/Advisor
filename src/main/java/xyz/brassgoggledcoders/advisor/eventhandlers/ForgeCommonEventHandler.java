@@ -17,7 +17,6 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void addReloadListeners(AddReloadListenerEvent event) {
-
         AdvisorAPI.setEffectManager(new CodecReloadListener<>(AdvisorEffectTypes.DISPATCH_CODEC, "advisor/effect"));
         AdvisorAPI.setEffectTableManager(new EffectTableManager(event.getDataPackRegistries().getPredicateManager()));
         AdvisorAPI.setCauseManager(new CauseManager());
